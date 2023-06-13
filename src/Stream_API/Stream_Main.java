@@ -9,6 +9,13 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class Stream_Main {
+
+    /**
+
+     #Stream : performs the operation single-threaded'ly!
+     #StreamParallel : perform operations using multi-threading!
+
+     */
     public static void main(String[] args) {
 
         /**
@@ -41,7 +48,7 @@ public class Stream_Main {
         };
 
         /**
-         If we wanna process and do some operations, we shouldn't change the original values, but process them in a new stream
+         If we wanna process and do some operations, we shouldn't change the original values unless we are asked to do so, but process them in a new stream
          */
         List<Integer> numbers = Arrays.asList(2,0,-2,1,4,9);
         numbers.forEach(n -> System.out.print(n+" "));
