@@ -4,10 +4,41 @@ import Collection_Framework.Collections.Lists;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class Stream_Main {
     public static void main(String[] args) {
+
+        /**
+
+         #The filter method takes the arg Predicate, which is a functional interface that has the abstract method test, which takes an object T
+          Thus, we can create an object of predicate and override the test method so it does the function we want!
+          -> in this case : function as n % 2 != 0
+
+         */
+
+        Predicate<Integer> predicate = new Predicate<Integer>() {
+            @Override
+            public boolean test(Integer n) {
+                return n % 2 != 0;
+            }
+        };
+
+        /**
+
+         #The .map() method takes an arg of Function, which is an interface that owns an abstract method apply that takes an object of T as an arg!
+          Thus, we can create a Function object to perform the function we want
+          -> In this case : increment the odd value by one!
+         */
+
+        Function<Integer,Integer> function = new Function<Integer, Integer>() {
+            @Override
+            public Integer apply(Integer n) {
+                return n+=1;
+            }
+        };
 
         /**
          If we wanna process and do some operations, we shouldn't change the original values, but process them in a new stream
@@ -49,22 +80,38 @@ public class Stream_Main {
             Stream<Integer> mapStreamData = numbers.stream();
 
             mapStreamData
-                    .map(n -> {
-                        if (n % 2 != 0) {
-                            n++;
-                    } else {
-                        n /= 2;
-                    }
-                    return n;
-                })
+                    .filter(predicate) // The predicate plays the role of "n%2 != 0' odd number
+                    .map(function) //The function plays the role of " n -> n+=1"
                     .forEach(n -> System.out.print(n+" "));
 
             mapStreamData.close();
 
+            //Sum of incremented odd values
+            int sum = numbers.stream()
+                    .filter(predicate)
+                    .map(function)
+                    .reduce(0,(a,b) -> a+b);
+
+            System.out.println(", and their sum is : "+sum);
+            /**
+
+             #Let's say we want to get the output of the sum of the incremented odd values!
+              Here we will have to use the reduce() method...
+
+             # .reduce() method :
+                It takes the first arg as a value of the type T, then it takes the second arg as BinaryOperator!
+
+             #The BinaryOperator is an interface that extends the BiFunction interface, which has the abstract method apply
+              which takes the args a & b of the type generic!
+
+             -> Thus we can initialize the first argument's value as 0, and then give two args, for the second arg and override the abstract method using lambda expression
+                so, we add them together and at the end get the sum of the incremented odd values in the stream!
+             */
+
+
         } catch (IllegalStateException e) {
             System.out.println("\nException occurred! -> "+e);
         } finally {
-            ;numbers.clear();
             numbersStreamData.close();
         }
     }
